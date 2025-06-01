@@ -1,5 +1,5 @@
 'use client';
-import { Settlement, Person, Item } from '../types'; // Certifique-se que Item está importado se usado aqui, ou remova
+import { Settlement, Person } from '../types'; // Certifique-se que Item está importado se usado aqui, ou remova
 
 // Função auxiliar para formatar moeda (pode ser movida para um arquivo utils)
 const formatCurrency = (value: number) => {

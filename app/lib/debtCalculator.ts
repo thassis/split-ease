@@ -1,4 +1,4 @@
-import { Person, Item, Settlement } from '../types';
+import { Person, Settlement } from '../types';
 
 // Função auxiliar para calcular o total gasto por uma pessoa, incluindo taxa
 const calculatePersonTotal = (person: Person): number => {
@@ -33,8 +33,8 @@ export const calculateSettlements = (people: Person[]): Settlement[] => {
   // Separar devedores e credores
   // Usar uma pequena tolerância para evitar problemas com ponto flutuante
   const tolerance = 0.001;
-  let debtors = adjustedBalances.filter((p) => p.amount < -tolerance);
-  let creditors = adjustedBalances.filter((p) => p.amount > tolerance);
+  const debtors = adjustedBalances.filter((p) => p.amount < -tolerance);
+  const creditors = adjustedBalances.filter((p) => p.amount > tolerance);
 
   const settlements: Settlement[] = [];
 
