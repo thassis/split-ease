@@ -1,12 +1,10 @@
 'use client';
-import { Settlement, Person } from '../types'; // Certifique-se que Item está importado se usado aqui, ou remova
+import { Settlement, Person } from '../types';
 
-// Função auxiliar para formatar moeda (pode ser movida para um arquivo utils)
 const formatCurrency = (value: number) => {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
-// Função auxiliar para calcular o total gasto por uma pessoa (pode ser movida para utils)
 const calculateTotalSpentByPerson = (person: Person): number => {
   return person.items.reduce((sum, item) => {
     let totalForItem = item.value;

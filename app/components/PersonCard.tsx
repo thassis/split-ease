@@ -9,7 +9,6 @@ interface PersonCardProps {
   onDeletePerson: (personId: string) => void;
 }
 
-// Função auxiliar para formatar moeda
 const formatCurrency = (value: number) => {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
