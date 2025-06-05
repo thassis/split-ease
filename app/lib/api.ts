@@ -1,5 +1,13 @@
+import { Item, Person, Settlement } from "../../types";
+
 // Client-side API utilities
 const API_BASE_URL = '/api';
+
+type UpdateSplitData = {
+  people: Person[];
+  settlements: Settlement[];
+  items: Item[];
+};
 
 export const clientApi = {
   async createNewSplit(): Promise<{ id: string; shareId: string }> {
@@ -34,7 +42,7 @@ export const clientApi = {
 
   async updateSplit(
     shareId: string, 
-    data: any
+    data: UpdateSplitData
   ) {
     const response = await fetch(`${API_BASE_URL}/split/${shareId}`, {
       method: 'PUT',

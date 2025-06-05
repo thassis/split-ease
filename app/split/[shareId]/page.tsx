@@ -6,7 +6,7 @@ import { calculateSettlements } from '../../lib/debtCalculator';
 import AddPersonForm from '../../components/AddPersonForm';
 import PersonCard from '../../components/PersonCard';
 import ResultsDisplay from '../../components/ResultsDisplay';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { clientApi } from '../../lib/api';
 
 export default function SplitPage() {
