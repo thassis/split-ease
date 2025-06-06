@@ -1,7 +1,7 @@
-import { clientApi } from "@/lib/api"; // Supondo que clientApi use 'fetch' internamente
+import { clientApi, UpdateSplitData } from "@/lib/api"; // Supondo que clientApi use 'fetch' internamente
 
 // Mock global.fetch antes de todos os testes
-let mockFetch: any;
+let mockFetch: jest.Mock;
 
 beforeEach(() => {
   // Cria um novo mock para fetch antes de cada teste
@@ -68,16 +68,15 @@ describe('clientApi.getSplitByShareId', () => {
 
 describe('clientApi.updateSplit', () => {
   const shareId = 'split1';
-  const data = { title: 'Novo Título' };
+  const data: UpdateSplitData = { items: [], people: [], settlements: [] };
 
   it('deve retornar true no sucesso', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      // Adicione json: async () => ({}) se sua clientApi.updateSplit tentar ler o corpo da resposta
     });
 
-    const result = await clientApi.updateSplit(shareId, data as any);
+    const result = await clientApi.updateSplit(shareId, data);
 
     expect(mockFetch).toHaveBeenCalledWith(expect.stringContaining(`/split/${shareId}`), expect.objectContaining({
       method: 'PUT',
@@ -92,7 +91,7 @@ describe('clientApi.updateSplit', () => {
       status: 404,
     });
 
-    const result = await clientApi.updateSplit(shareId, data as any);
+    const result = await clientApi.updateSplit(shareId, data);
 
     expect(result).toBe(false);
   });
@@ -103,6 +102,6 @@ describe('clientApi.updateSplit', () => {
       status: 500,
     });
 
-    await expect(clientApi.updateSplit(shareId, data as any)).rejects.toThrow('Failed to update split');
+    await expect(clientApi.updateSplit(shareId, data)).rejects.toThrow('Failed to update split');
   });
 });

@@ -3,7 +3,7 @@ import { Item, Person, Settlement } from "../../types";
 // Client-side API utilities
 const API_BASE_URL = '/api';
 
-type UpdateSplitData = {
+export type UpdateSplitData = {
   people: Person[];
   settlements: Settlement[];
   items: Item[];
