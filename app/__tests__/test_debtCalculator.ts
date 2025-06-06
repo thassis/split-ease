@@ -66,4 +66,17 @@ describe('calculateSettlements', () => {
 
     expect(calculateSettlements(people)).toEqual([]);
   });
+
+  it('calculates settlements when one person paid for everything', () => {
+  const people: Person[] = [
+    { id: '1', name: 'Alice', items: [{ id: 'a1', name: 'Pizza', value: 100 }, { id: 'a2', name: 'Soda', value: 50 }] }, // Paid 150 total
+    { id: '2', name: 'Bob', items: [] },
+    { id: '3', name: 'Carol', items: [] },
+  ];
+
+  expect(calculateSettlements(people)).toEqual([
+    { from: 'Bob', to: 'Alice', amount: 50 },
+    { from: 'Carol', to: 'Alice', amount: 75 },
+  ]);
+});
 });
