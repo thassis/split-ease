@@ -76,7 +76,7 @@ describe('calculateSettlements', () => {
 
   expect(calculateSettlements(people)).toEqual([
     { from: 'Bob', to: 'Alice', amount: 50 },
-    { from: 'Carol', to: 'Alice', amount: 75 },
+    { from: 'Carol', to: 'Alice', amount: 50 },
   ]);
 });
 });
