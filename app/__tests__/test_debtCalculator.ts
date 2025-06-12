@@ -80,21 +80,20 @@ describe('calculateSettlements', () => {
   ]);
 });
 
-    it('calculates simple settlement between two people', () => {
-    const people: Person[] = [
-      { id: '1', name: 'Alice', items: [{ id: 'a1', name: 'Bife', value: 150 }] },
-      { id: '2', name: 'Bob', items: [{id: 'b1', name: 'Hambúrguer', value: 50}] },
-      { id: '3', name: 'Carol', items: [{id: 'c1', name: 'Refrigerante', value: 10}]},
-      { id: '4', name: 'David', items: [{id: 'd1', name: 'Macarrão', value: 100}]},
-      {id: '5', name: 'Eve', items:  [{id: 'e1', name: 'Sanduíche', value: 15}]},
-    ];
+  it('calculates simple settlement between five people', () => {
+  const people: Person[] = [
+    { id: '1', name: 'Alice', items: [{ id: 'a1', name: 'Bife', value: 150 }] },
+    { id: '2', name: 'Bob', items: [{id: 'b1', name: 'Hambúrguer', value: 50}] },
+    { id: '3', name: 'Carol', items: [{id: 'c1', name: 'Refrigerante', value: 10}]},
+    { id: '4', name: 'David', items: [{id: 'd1', name: 'Macarrão', value: 100}]},
+    { id: '5', name: 'Eve', items:  [{id: 'e1', name: 'Sanduíche', value: 15}]},
+  ];
 
-    expect(calculateSettlements(people)).toEqual([
-      { from: 'Carol', to: 'Alice', amount: 55 },
-      { from: 'Eve', to: 'Alice', amount: 30 },
-      { from: 'Eve', to: 'David', amount: 20},
-      { from: 'Bob', to: 'David', amount: 15},
+  expect(calculateSettlements(people)).toEqual([
+    { from: 'Carol', to: 'Alice', amount: 55 },
+    { from: 'Eve', to: 'Alice', amount: 30 },
+    { from: 'Eve', to: 'David', amount: 20},
+    { from: 'Bob', to: 'David', amount: 15},
   ]);
 });
-  });
 });
