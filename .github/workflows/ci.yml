@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 jobs:
+  # Testes unitários que não precisam de MongoDB
   general-tests:
     name: Testes Gerais (sem Mongo)
     runs-on: ${{ matrix.os }}
@@ -30,25 +31,13 @@ jobs:
       - name: Rodar Testes sem integração
         run: npm test -- --testPathIgnorePatterns=app/__tests__/integration/split.test.ts
 
+  # Testes de integração com MongoDB em todos os SOs (instala manualmente o Mongo)
   integration-tests:
     name: Testes de Integração com MongoDB
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
-
-    # Só no Linux usa container
-    services:
-      mongo:
-        if: matrix.os == 'ubuntu-latest'
-        image: mongo:6
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - name: Checkout do código
@@ -63,7 +52,15 @@ jobs:
       - name: Instalar Dependências
         run: npm ci
 
-      # Instala manualmente o MongoDB apenas no Windows e macOS
+      - name: Instalar MongoDB no Linux
+        if: runner.os == 'Linux'
+        run: |
+          wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo gpg --dearmor -o /usr/share/keyrings/mongodb-server-7.0.gpg
+          echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-org
+          sudo systemctl start mongod
+
       - name: Instalar MongoDB no macOS
         if: runner.os == 'macOS'
         run: |
