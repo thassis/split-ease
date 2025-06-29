@@ -71,10 +71,18 @@ jobs:
 
       - name: Instalar MongoDB no Windows
         if: runner.os == 'Windows'
+        shell: powershell
         run: |
-          choco install mongodb --version=6.0.13 --params="/InstallDir:C:\mongodb"
-          mkdir C:\data\db
-          Start-Process -FilePath "C:\mongodb\bin\mongod.exe" -ArgumentList "--dbpath=C:\data\db" -NoNewWindow
+          choco install mongodb --version=6.0.13 -y
+          $mongodPath = Get-ChildItem "C:\Program Files\MongoDB\Server\6.0\bin\mongod.exe" -ErrorAction SilentlyContinue
+
+          if (-not $mongodPath) {
+            Write-Error "mongod.exe não encontrado!"
+            exit 1
+          }
+
+          mkdir C:\data\db -Force
+          Start-Process -FilePath $mongodPath.FullName -ArgumentList "--dbpath=C:\data\db" -NoNewWindow
 
       - name: Esperar MongoDB subir
         run: sleep 15
