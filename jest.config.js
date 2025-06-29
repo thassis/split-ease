@@ -10,7 +10,7 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   // Adicione mais opções de setupFilesAfterEnv aqui se necessário
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jest-environment-jsdom',
+  testEnvironment: 'node',
   // Se você estiver usando aliases de módulo (modulePathPatterns) ou baseUrl no tsconfig.json/jsconfig.json,
   // você precisará configurar o moduleNameMapper no Jest.
   moduleNameMapper: {

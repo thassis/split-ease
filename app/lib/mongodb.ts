@@ -99,4 +99,6 @@ const dbOperations = {
   }
 };
 
+export const getClient = () => client;
+
 export default dbOperations;
