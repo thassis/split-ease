@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Rodar Testes sem integração
-        run: npm test -- --testPathIgnorePatterns=integration.test.ts
+        run: npm test -- --testPathIgnorePatterns=app/__tests__/integration/split.test.ts
 
   # Job para testes de integração com Mongo
   integration-tests:
@@ -62,6 +62,6 @@ jobs:
         run: npm ci
 
       - name: Rodar Testes de Integração
-        run: npm test -- integration.test.ts
+        run: npm test app/__tests__/integration/split.test.ts
         env:
           MONGODB_URI: mongodb://localhost:27017/testdb
