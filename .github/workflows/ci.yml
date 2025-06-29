@@ -7,11 +7,10 @@ on:
     branches: [main]
 
 jobs:
-  # Job para testes gerais (unitários, etc.)
+  # Testes unitários que não precisam de MongoDB
   general-tests:
     name: Testes Gerais (sem Mongo)
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
@@ -32,21 +31,13 @@ jobs:
       - name: Rodar Testes sem integração
         run: npm test -- --testPathIgnorePatterns=app/__tests__/integration/split.test.ts
 
-  # Job para testes de integração com Mongo
+  # Testes de integração com MongoDB em todos os SOs (instala manualmente o Mongo)
   integration-tests:
-    name: Testes de Integração com Mongo (so funciona no Linux)
-    runs-on: ubuntu-latest
-
-    services:
-      mongo:
-        image: mongo:6
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+    name: Testes de Integração com MongoDB
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
 
     steps:
       - name: Checkout do código
@@ -60,6 +51,34 @@ jobs:
 
       - name: Instalar Dependências
         run: npm ci
+
+      - name: Instalar MongoDB no Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
+          echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-org
+          sudo systemctl start mongod
+
+      - name: Instalar MongoDB no macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew tap mongodb/brew
+          brew install mongodb-community@6.0
+          brew services start mongodb/brew/mongodb-community
+
+      - name: Instalar MongoDB no Windows
+        if: runner.os == 'Windows'
+        run: |
+          choco install mongodb --version=6.0.13 --params="/InstallDir:C:\mongodb"
+          mkdir C:\data\db
+          Start-Process -FilePath "C:\mongodb\bin\mongod.exe" -ArgumentList "--dbpath=C:\data\db" -NoNewWindow
+
+      - name: Esperar MongoDB subir
+        run: sleep 15
 
       - name: Rodar Testes de Integração
         run: npm test app/__tests__/integration/split.test.ts
