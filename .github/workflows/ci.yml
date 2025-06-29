@@ -2,20 +2,40 @@ name: CI Next.js com Jest
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  test:
-    name: Rodar Testes Jest
-    runs-on: "${{ matrix.os }}"
+  # Job para testes gerais (unitários, etc.)
+  general-tests:
+    name: Testes Gerais (sem Mongo)
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: ["ubuntu-latest", "macos-latest", "windows-latest"]
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Rodar Testes sem integração
+        run: npm test -- --testPathIgnorePatterns=integration.test.ts
+
+  # Job para testes de integração com Mongo
+  integration-tests:
+    name: Testes de Integração com Mongo (so funciona no Linux)
+    runs-on: ubuntu-latest
 
     services:
       mongo:
@@ -23,9 +43,9 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'" 
-          --health-interval=10s 
-          --health-timeout=5s 
+          --health-cmd="mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval=10s
+          --health-timeout=5s
           --health-retries=5
 
     steps:
@@ -41,7 +61,7 @@ jobs:
       - name: Instalar Dependências
         run: npm ci
 
-      - name: Rodar Testes Jest
-        run: npm test
+      - name: Rodar Testes de Integração
+        run: npm test -- integration.test.ts
         env:
           MONGODB_URI: mongodb://localhost:27017/testdb
