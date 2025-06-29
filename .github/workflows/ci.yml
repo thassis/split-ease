@@ -65,8 +65,9 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew tap mongodb/brew
-          brew install mongodb-community@6.0
-          brew services start mongodb/brew/mongodb-community
+          brew install mongodb/brew/mongodb-community@6.0
+          brew services start mongodb/brew/mongodb-community@6.0
+
 
       - name: Instalar MongoDB no Windows
         if: runner.os == 'Windows'
