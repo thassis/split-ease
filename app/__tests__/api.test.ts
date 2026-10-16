@@ -104,4 +104,13 @@ describe('clientApi.updateSplit', () => {
 
     await expect(clientApi.updateSplit(shareId, data)).rejects.toThrow('Failed to update split');
   });
+
+  it('deve lançar erro se a resposta for 400 (Bad Request)', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 400,
+    });
+
+    await expect(clientApi.createNewSplit()).rejects.toThrow('Failed to create new split');
+  });
 });
