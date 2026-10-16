@@ -5,7 +5,7 @@ const API_BASE_URL = '/api';
 
 export type UpdateSplitData = {
   people: Person[];
-  settlements: Settlement[];
+  settlements: Settlement[]
   items: Item[];
 };
 
